@@ -152,7 +152,7 @@
                             <h1 class="display-4 text-center">
                               <i class="fas fa-book-open text-primary"></i><span class="text-primary" style="color:#e94d1c;">Lista de contatos</span></h1>
                               <!--<div class="alert alert-success">Whatever the message</div> -->
-                              <form id="contato-form"  style="border: solid 1px #e94d1c; border-radius: 2px">
+                              <form id="contato-form"  style="border-top: solid 1px #e94d1c">
                                     <div class="panel-body row">
                                         <div class="col-md-6 col-sm-6">
                                             <div class="form-group">
@@ -161,7 +161,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="lastname-dd">Telefone <span class="require">*</span></label>
-                                                <input type="text" id="telefone" class="form-control" autocomplete="off">
+                                                <input type="text" id="telefone" class="form-control" placeholder="(99) 99999-9999" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-sm-6">
@@ -192,6 +192,9 @@
                                     </thead>
                                     <tbody id="contato-list"></tbody>
                                 </table>
+                                <div id="master">
+                                    <div id="msg"></div>
+                                </div>
                         </div>  
                     </div>
                 </div>
@@ -300,6 +303,10 @@
     <script src="assets/plugins/fancybox/source/jquery.fancybox.pack.js" type="text/javascript"></script><!-- pop up -->
 
     <script src="assets/corporate/scripts/layout.js" type="text/javascript"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js" type="text/javascript"></script>
+    
+
     <script type="text/javascript">
         jQuery(document).ready(function () {
             Layout.init();
@@ -352,7 +359,12 @@
             static exibirContatos() {
                 const contatos = Master.obterContatos();
 
-                contatos.forEach((contato) => UI.addContatoNoGrid(contato));
+                if (contatos.length === 0) {
+                    UI.mostrarMsgContatosVazio('Não existe contatos cadastrados!', 'success');
+                }else{                                        
+                    contatos.forEach((contato) => UI.addContatoNoGrid(contato));  
+
+                }
             }
 
             static addContatoNoGrid(contato) {
@@ -368,6 +380,7 @@
                 `;
 
                 lista.appendChild(linha);
+
             }
 
             static excluirContato(contato){
@@ -388,6 +401,19 @@
                 setTimeout(() => document.querySelector('.alert').remove(), 3000);
             }
 
+            static mostrarMsgContatosVazio(message, className){
+                const div = document.createElement('div');
+                div.className = `alert alert-${className}`;
+                div.appendChild(document.createTextNode(message));
+                const container = document.querySelector('#master');
+                const form = document.querySelector('#msg');
+                container.insertBefore(div, form);
+
+                // Ocultar a messagem apos a adição ou exclusão
+                setTimeout(() => document.querySelector('.alert').remove(), 3000);
+            }
+
+            
             static limparCampos() {
                 document.querySelector('#nome').value = '';
                 document.querySelector('#endereco').value = '';
@@ -395,6 +421,9 @@
                 document.querySelector('#email').value = '';
             }
         }
+
+        
+        
 
         // Evento: Exibir contatos
         document.addEventListener('DOMContentLoaded', UI.exibirContatos);
@@ -411,7 +440,7 @@
 
             // Validação 
             if (nome === '' || endereco === '' || telefone === '' || email === '') {
-                UI.mostrarMsg('Falta preencher campos(*)', 'danger');
+                UI.mostrarMsg('Falta preencher campos (*)', 'danger');
             }else{
                 // Instancia do contato
                 const contato = new Contato(nome, endereco, telefone, email);
@@ -423,7 +452,7 @@
                 Master.addContato(contato);
 
                 // Mostrar msg
-                UI.mostrarMsg('Contato adicionado!', 'success');
+                UI.mostrarMsg('Contato adicionado com sucesso!', 'success');
 
                 // limpar campos
                 UI.limparCampos();
@@ -441,6 +470,27 @@
             // Msg ao ecluir contato
             UI.mostrarMsg('Contato excluído com sucesso!', 'success');
         });
+
+
+        $(document).ready(function(){
+
+            var SPMaskBehavior = function (val) {
+                return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+            },
+            spOptions = {
+                onKeyPress: function(val, e, field, options) {
+                field.mask(SPMaskBehavior.apply({}, arguments), options);
+                }
+            };
+            $("#telefone").mask(SPMaskBehavior, spOptions);	
+
+        })
+
+
+        
+
+	
+	
 
     </script>
 </body>
