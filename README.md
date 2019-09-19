@@ -1,11 +1,10 @@
-# [Cadastro de Contatos]
+# Cadastro de Contatos
 
-[Resume]
-Cadastro de contatos.
+Cadastro de contatos free.
 
-## Preview
+## Tela
 
-[![Tela](https://github.com/Wesley-Silva/Contatos/blob/master/assets/pages/img/tela%20do%20sistema.JPG)]
+![Tela](https://github.com/Wesley-Silva/Contatos/blob/master/assets/pages/img/tela%20do%20sistema.JPG)
 
 **[View Live Preview](https://github.com/Wesley-Silva/Contatos/blob/master/assets/pages/img/tela%20do%20sistema.JPG)**
 
