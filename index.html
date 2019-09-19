@@ -298,17 +298,11 @@ Purchase Premium Metronic Admin Theme: http://themeforest.net/item/metronic-resp
                 <div class="col-md-12">
                     <div class="content-page" style="border:solid 1px white;">
 
-                        <!-- BEGIN SHIPPING ADDRESS -->
-                        <div id="shipping-address" class="panel panel-default">
-                            <div class="panel-heading">
-                                <h2 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#checkout-page" href="#shipping-address-content" class="accordion-toggle">
-                                        Lista de contatos
-                                    </a>
-                                </h2>
-                            </div>
-                            <div id="shipping-address-content" class="panel-collapse collapse">
-                                <form id="contato-form">
+                        <div class="container mt-4">
+                            <h1 class="display-4 text-center">
+                              <i class="fas fa-book-open text-primary"></i> My<span class="text-primary">Book</span>List</h1>
+                              <!--<div class="alert alert-success">Whatever the message</div> -->
+                              <form id="contato-form">
                                     <div class="panel-body row">
                                         <div class="col-md-6 col-sm-6">
                                             <div class="form-group">
@@ -347,10 +341,7 @@ Purchase Premium Metronic Admin Theme: http://themeforest.net/item/metronic-resp
                                     </thead>
                                     <tbody id="contato-list"></tbody>
                                 </table>
-                                <!--End table-->
-                            </div>
-                        </div>
-                        <!-- END SHIPPING ADDRESS -->
+                        </div>  
                     </div>
                 </div>
                 <!-- END CONTENT -->
@@ -510,6 +501,39 @@ Purchase Premium Metronic Admin Theme: http://themeforest.net/item/metronic-resp
             }
         }
 
+        class UI {
+            static exibirContatos() {
+                const contatos = Master.obterContatos();
+
+                contatos.forEach((contato) => UI.addContatoNoGrid(contato));
+            }
+
+            static addContatoNoGrid(contato) {
+                const lista = document.querySelector('#contato-list');
+                const linha = document.createElement('tr');
+
+                linha.innerHTML = `
+                    <td>${ contato.nome }</td>
+                    <td>${ contato.endereco }</td>
+                    <td>${ contato.telefone }</td>
+                    <td>${ contato.email }</td>
+                    <td><a href="#" class="btn btn-danger btn-sm delete">X</a></td>
+                `;
+
+                lista.appendChild(linha);
+            }
+
+            static limparCampos() {
+                document.querySelector('#nome').value = '';
+                document.querySelector('#endereco').value = '';
+                document.querySelector('#telefone').value = '';
+                document.querySelector('#email').value = '';
+            }
+        }
+
+        // Evento: Exibir contatos
+        document.addEventListener('DOMContentLoaded', UI.exibirContatos);
+
         // Adicionar contato
         document.querySelector('#contato-form').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -523,8 +547,14 @@ Purchase Premium Metronic Admin Theme: http://themeforest.net/item/metronic-resp
             // Instancia do contato
             const contato = new Contato(nome, endereco, telefone, email);
 
+            // Adicionar contatos no grid
+            UI.addContatoNoGrid(contato);
+
             // Adicionar contato no localstorage
             Master.addContato(contato);
+
+            // limpar campos
+            UI.limparCampos();
         });
 
     </script>
